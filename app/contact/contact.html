@@ -1,0 +1,95 @@
+<head>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../home/styles.css">
+    <script src="validation.js"></script>
+</head>
+
+<body>
+    <div class="navbar">
+        <nav>
+            <ul>
+                <li><a class="active" href="home.html" style="color: black; margin-left: 8px;">Strona główna<a></li>
+                <li><a href="news.html">Nowości</a></li>
+                <li><a href="interviews.html">Wywiady</a></li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Kluby ▼</a>
+                    <div class="dropdown-content">
+                        <a href="../clubs/manchester-united/manchester-united.html">Manchester United</a>
+                        <a href="../clubs/manchester-city/manchester-city.html">Manchester City</a>
+                        <a href="../clubs/liverpool/liverpool.html">Liverpool</a>
+                        <a href="../clubs/chelsea/chelsea.html">Chelsea</a>
+                        <a href="../clubs/arsenal/arsenal.html">Arsenal</a>
+                        <a href="../clubs/tottenham/tottenham.html">Tottenham</a>
+                    </div>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Statystyki ▼</a>
+                    <div class="dropdown-content">
+                        <a href="#">Gole</a>
+                        <a href="#">Asysty</a>
+                        <a href="#">Czyste konta</a>
+                    </div>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Forum ▼</a>
+                    <div class="dropdown-content">
+                        <a href="#">Forum</a>
+                        <a href="#">Regulamin</a>
+                        <a href="#">Użytkownicy</a>
+                    </div>
+                </li>
+                <li><a href="../login/login.html">Zaloguj się</a></li>
+                <li><a href="../register/register.html">Zarejestruj się</a></li>
+                <li><a href="../contact/contact.html">Kontakt</a></li>
+            </ul>
+        </nav>
+    </div>
+
+
+    <h5><b>Skontaktuj się z nami</b></h5>
+        <div class="form-email">
+                <form id="contact-form" name="contact-form" action="mail.php" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="md-form mb-0">
+                                <input type="text" id="name" name="name" class="form-control">
+                                <label for="name" class="">Imię</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="md-form mb-0">
+                                <input type="text" id="email" name="email" class="form-control">
+                                <label for="email" class="">E-mail</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="md-form mb-0">
+                                <input type="text" id="subject" name="subject" class="form-control">
+                                <label for="subject" class="">Temat</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="md-form">
+                                <textarea type="text" id="message" name="message" rows="2"
+                                    class="form-control md-textarea"></textarea>
+                                <label for="message">Treść wiadomości</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-center text-md-left">
+                    <a class="btn btn-primary" onclick="validateForm();">Wyślij</a>
+                </div>
+                <div class="status"></div>
+        </div>
+</body>
