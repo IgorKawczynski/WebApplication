@@ -9,8 +9,11 @@
   $subject = $_POST['subject'];
 
   $content="From: $name \n Email: $email \n Message: $message";
-  $recipient = "youremail@here.com";
+  $recipient = "mojemail121@onet.pl";
   $mailheader = "From: $email \r\n";
-  mail($recipient, $subject, $content, $mailheader) or die("Error!");
-  echo "Email sent!";
+  $status =   mail($recipient, $subject, $content, $mailheader);
+  echo $status ? 'Mail wysłany' : 'Error przy wysyłaniu maila !'
+  // mail('kluseczkibabuni94@gmail.com', $subject, $content, 'igor12168@onet.pl');
+  // mail($recipient, $subject, $content, $mailheader) or die("Error!");
+  // echo "Email wysłany!";
 ?>
