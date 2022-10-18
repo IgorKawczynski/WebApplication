@@ -134,12 +134,12 @@ h5 {
 }
 
 .navbar a:hover {
-    background-color: rgb(0, 255, 204);
+    background-color: rgb(226, 220, 152);
     color: black;
 }
 
 .navbar a.active {
-    background-color: rgb(0, 255, 204);
+    background-color: rgb(226, 220, 152);
     color: white;
 }
 
@@ -167,7 +167,7 @@ li a,
 
 li a:hover,
 .dropdown:hover .dropbtn {
-    background-color: rgb(0, 255, 204);
+    background-color: rgb(226, 220, 152);
 }
 
 li.dropdown {
