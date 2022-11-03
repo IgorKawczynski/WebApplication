@@ -13,7 +13,7 @@
   $mailheader = "From: $email \r\n";
   $status =   mail($recipient, $subject, $content, $mailheader);
   echo $status ? 'Mail wysłany' : 'Error przy wysyłaniu maila !'
-  // mail('kluseczkibabuni94@gmail.com', $subject, $content, 'igor12168@onet.pl');
+  // mail('blablauni94@gmail.com', $subject, $content, 'igor1xxxx21@onet.pl');
   // mail($recipient, $subject, $content, $mailheader) or die("Error!");
   // echo "Email wysłany!";
 ?>

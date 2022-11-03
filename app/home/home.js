@@ -1,4 +1,4 @@
-/* WŁASNA IMPLEMENTACJA ZEGARA */
+/* IMPLEMENTACJA ZEGARA */
 
 function currentTime() {
 
