@@ -1,7 +1,7 @@
 function validateForm() {
     var name =  document.getElementById('name').value;
     if (name == "") {
-        document.querySelector('.status').innerHTML = "Nazwa nie może być pusta !";
+        document.querySelector('.status').innerHTML = "Imię nie może być puste !";
         return false;
     }
     var email =  document.getElementById('email').value;
