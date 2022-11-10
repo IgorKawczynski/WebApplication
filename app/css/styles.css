@@ -1,6 +1,6 @@
 body {
     font-family: 'PremierSans-Regular', Roboto, Helvetica, Arial, sans-serif;
-    background: url('../../assets/anfield.jpeg');
+    background: url('./assets/anfield.jpeg');
     background-size: cover;
     margin: 0;
     padding: 0;
@@ -164,13 +164,14 @@ li.dropdown {
 
 .footer-start {
     width: auto;
+    position: relative;
     margin-top: -8px;
     background-color: rgb(38, 38, 41);
     color:white;
 }
 .footer-end {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
     width: auto;
     width: 100%;
     background-color: rgb(38, 38, 41);
@@ -196,17 +197,17 @@ li.dropdown {
 /* CZCIONKI DO WSTĘPU */
 @font-face {
     font-family: 'PremierSans-Regular';
-    src: url('../../assets/fonts/PremierLeagueW01-Regular.woff2') format('woff2');
+    src: url('./assets/fonts/PremierLeagueW01-Regular.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'PremierSans-Bold';
-    src: url('../../assets/fonts/PremierLeagueW01-Bold.woff2') format('woff2');
+    src: url('./assets/fonts/PremierLeagueW01-Bold.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'PremierSans-Light';
-    src: url('../../assets/fonts/PremierLeagueW01-Light.woff2') format('woff2');
+    src: url('./assets/fonts/PremierLeagueW01-Light.woff2') format('woff2');
 }
 
 * {

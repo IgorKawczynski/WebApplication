@@ -160,14 +160,15 @@ li.dropdown {
 .footer-start {
     width: auto;
     background-color: rgb(38, 38, 41);
-    color:white;
+    color: white;
 }
+
 .footer-end {
     margin-bottom: 0;
     width: auto;
     width: 100%;
     background-color: rgb(38, 38, 41);
-    color:white;
+    color: white;
 }
 
 .form-email {

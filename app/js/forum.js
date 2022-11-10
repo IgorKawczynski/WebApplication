@@ -7,9 +7,9 @@ function animation1() {
             borderWidth: "10px"
         }, 1500);
     });
-    }
-    
-    function animation2() {
+}
+
+function animation2() {
     $("#btn2").on({
         "mouseover": function () {
             $(this).animate({
@@ -22,10 +22,10 @@ function animation1() {
             }, 800);
         }
     });
-    }
-    
-    
-    function animation3() {
+}
+
+
+function animation3() {
     $("#btn3").on("click", function () {
         if (!$(this).is(":animated")) {
             $(this).animate({
@@ -36,4 +36,4 @@ function animation1() {
             });
         }
     });
-    }
+}

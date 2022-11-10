@@ -33,13 +33,13 @@ function changeBackground(hexNumber) {
 }
 
 function changeBackgroundImage1() {
-    document.body.style.backgroundImage = "url('../../assets/wallpaper3.jpg')";
+    document.body.style.backgroundImage = "url('http:/localhost/Application/assets/wallpaper3.jpg')";
     console.log("MOTYW ZMIENIONY");
     alert("MOTYW ZMIENIONY");
 }
 
 function changeBackgroundImage2() {
-    document.body.style.backgroundImage = "url('../../assets/wallpaper2.png')";
+    document.body.style.backgroundImage = "wallpaper2.jpg";
     console.log("MOTYW ZMIENIONY");
     alert("MOTYW ZMIENIONY");
 }

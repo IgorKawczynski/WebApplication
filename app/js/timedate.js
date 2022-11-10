@@ -3,31 +3,26 @@
 var timerId = null;
 var timerRunning = false;
 
-function getTheDate() 
-{
+function getTheDate() {
     Today = new Date();
     Time = "" + (Today.getMonth() + 1) + " / " + Today.getDate() + " / " + (Today.getYear() - 100);
     document.getElementById("data").innerHTML = Time;
 }
 
-function stopClock() 
-{
-    if(timerRunning)
-    {
+function stopClock() {
+    if (timerRunning) {
         clearTimeout(timerId);
     }
     timerRunning = false;
 }
 
-function startClock()
-{
+function startClock() {
     stopClock();
     getDate();
     showTime();
 }
 
-function showTime()
-{
+function showTime() {
     var now = new Date();
     var hours = now.getHours;
     var minutes = now.getMinutes;

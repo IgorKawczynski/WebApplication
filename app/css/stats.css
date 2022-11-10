@@ -154,17 +154,17 @@ li.dropdown {
 
 #tableAssists {
     margin-bottom: 0;
-    background: url('../../assets/assists.jpg')
+    background: url('./assets/assists.jpg')
 }
 
 #tableCleanSheets {
     margin-bottom: 0;
-    background: url('../../assets/cleansheets2.jpg')
+    background: url('./assets/cleansheets2.jpg')
 }
 
 #tableGoals {
     margin-bottom: 0;
-    background: url('../../assets/goals.jpg')
+    background: url('./assets/goals.jpg')
 }
 
 .table tr {
@@ -178,8 +178,9 @@ li.dropdown {
 .footer-start {
     width: auto;
     background-color: rgb(38, 38, 41);
-    color:white;
+    color: white;
 }
+
 .footer-end {
     margin-top: 0;
     margin-bottom: 0;
@@ -187,7 +188,7 @@ li.dropdown {
     height: auto;
     width: 100%;
     background-color: rgb(38, 38, 41);
-    color:white;
+    color: white;
 }
 
 .form-email {

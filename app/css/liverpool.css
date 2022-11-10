@@ -7,9 +7,9 @@
     object-fit: cover;
     opacity: 0.98;
     z-index: -1;
-  }
+}
 
-  .navbar {
+.navbar {
     box-shadow: 0 0 15px rgb(0, 0, 0);
     background-color: #333;
     overflow: hidden;
@@ -103,7 +103,7 @@ li.dropdown {
 .info1 {
 
     color: white;
-    position:absolute;
+    position: absolute;
     margin-top: 2%;
     margin-left: 50px;
 
