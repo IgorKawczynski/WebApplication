@@ -148,14 +148,14 @@
     include($site);
   }
 
-  if (file_exists($site))
-  {
-    return;
-  }
-  else
-  {
-    throw new ErrorException($site . " DOES NOT EXIST SIR !");
-  }
+  // if (file_exists($site))
+  // {
+  //   return;
+  // }
+  // else
+  // {
+  //   throw new ErrorException($site . " DOES NOT EXIST SIR !");
+  // }
 
   ?>
 </body>

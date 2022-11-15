@@ -1,6 +1,6 @@
 body {
     font-family: 'PremierSans-Regular', Roboto, Helvetica, Arial, sans-serif;
-    background: url('./assets/anfield.jpeg');
+    background: url('../../assets/anfield.jpeg');
     background-size: cover;
     margin: 0;
     padding: 0;
