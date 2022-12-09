@@ -23,9 +23,12 @@ Repository in the needs of "Projektowanie Aplikacji WWW" subject
 
 Some views :
 
-Home Page
-![image](https://user-images.githubusercontent.com/73948605/206675130-2eb1feaa-52f2-4e54-a036-ea94cb6ac9e0.png)
+<br> Home Page
+![image](https://user-images.githubusercontent.com/73948605/206675550-e4494e7a-2ae1-4935-8880-71c986ec5e7b.png)
 
-Admin Panel
+![image](https://user-images.githubusercontent.com/73948605/206675648-3b00e514-4cf1-4acf-9cec-bcb01131c83c.png)
+
+
+<br> Admin Panel
 ![image](https://user-images.githubusercontent.com/73948605/206675287-eec2452e-c7ca-4f57-9bc2-f94291821afb.png)
 
