@@ -21,3 +21,11 @@ Repository in the needs of "Projektowanie Aplikacji WWW" subject
   <br> 8. URL for the main view is : http://localhost/Application/?url=home
 </p>
 
+Some views :
+
+Home Page
+![image](https://user-images.githubusercontent.com/73948605/206675130-2eb1feaa-52f2-4e54-a036-ea94cb6ac9e0.png)
+
+Admin Panel
+![image](https://user-images.githubusercontent.com/73948605/206675287-eec2452e-c7ca-4f57-9bc2-f94291821afb.png)
+
