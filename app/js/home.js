@@ -1,5 +1,4 @@
 /* IMPLEMENTACJA ZEGARA */
-
 function currentTime() {
 
     let date = new Date();
@@ -19,7 +18,7 @@ function currentTime() {
 }
 currentTime();
 
-
+/* Event do strony głównej */
 function homePanelActivate() {
     const btn = document.querySelector('button');
     const home = document.querySelector('.home');

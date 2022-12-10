@@ -1,5 +1,6 @@
 <?php 
 
+// Wystartowanie sesji
 session_start();
 
 if(!isset($_SESSION['loginFailed']))
@@ -7,8 +8,10 @@ if(!isset($_SESSION['loginFailed']))
     $_SESSION['loginFailed'] = 1;
 }
 
+// Wyświetlenie wszystkich errorów
   mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+// Konfig bazy
   $dbhost = 'localhost';
   $dbuser = 'root';
   $dbpass = 'root';
@@ -17,6 +20,7 @@ if(!isset($_SESSION['loginFailed']))
   $username = $_POST['username'];
   $password = $_POST['password'];
 
+// Warunki pod logowanie
   if ( (empty($password) || empty($username) ) && $_SESSION['loginFailed'] != 0) {
     $_SESSION['loginFailed'] = 1;
   }
@@ -24,6 +28,7 @@ if(!isset($_SESSION['loginFailed']))
     $_SESSION['loginFailed'] = 0;
   }
 
+// Połączenie z bazą
   $link = mysqli_connect($dbhost, $dbuser, $dbpass);
   if(!$link) {
     echo'<b> Połączenie zostało zerwane! </b>';

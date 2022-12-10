@@ -1,3 +1,4 @@
+// Prosta Walidacja -> wszystko wg. komentarzy
 function validateForm() {
     var email = document.getElementById('form3').value;
     if (email == "") {

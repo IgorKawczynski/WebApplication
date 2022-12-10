@@ -36,14 +36,14 @@ function changeBackgroundImage1() {
     document.body.style.backgroundImage = "../../assets/wallpaper3.jpg";
     // document.body.style.backgroundImage = "url('Application/assets/anfield.jpeg')";
     // document.body.style.backgroundImage = url('Application/assets/anfield.jpeg');
-    console.log("MOTYW SZMIENIONY");
-    alert("MOTYW SZMIENIONY");
+    console.log("MOTYW ZMIENIONY");
+    alert("MOTYW ZMIENIONY");
 }
 
 function changeBackgroundImage2() {
     document.body.style.backgroundImage = "../../assets/wallpaper3.jpg";
     // document.body.style.backgroundImage = "url('anfield.jpeg')";
     // document.body.style.backgroundImage = url('Application/assets/anfield.jpeg');
-    console.log("MOTYW SZMIENIONY");
-    alert("MOTYW SZMIENIONY");
+    console.log("MOTYW ZMIENIONY");
+    alert("MOTYW ZMIENIONY");
 }

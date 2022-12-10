@@ -1,5 +1,6 @@
 <?php
 
+// Wykonanie zapytania typu SELECT do wyświetlenia podstron
 function pokazPodstrone($id, $link)
 {
     $id_clear = htmlspecialchars($id); // czyszczenie id - na wypadek SQL Injection Attack

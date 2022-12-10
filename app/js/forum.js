@@ -1,3 +1,8 @@
+// Funkcje do trzech animacji ->
+// 1. Do powiększenia przy jednorazowym kliknięciu w blok
+// 2. Do powiększania przy każdym najechaniu kursorem w blok
+// 3. Do powiększania i rozjaśniania przy każdym kliknięciu w blok
+
 function animation1() {
     $("#btn1").on("click", function () {
         $(this).animate({

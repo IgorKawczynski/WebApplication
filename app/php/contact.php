@@ -1,7 +1,7 @@
 <?php 
 
 
-
+// Funkcja do wyświetlenia formularza kontaktowego
 function pokazKontakt() { 
 
     echo '
@@ -76,11 +76,13 @@ function pokazKontakt() {
         </section>
     ';
 
+    // Wywołaj funkcję jeśli uzupełniłeś formularz
     if (isset($_POST['email'])){
         wyslijMailKontakt("igor12168@onet.pl");
     }
 }
 
+// Funkcja do wysłania maila 
 function  wyslijMailKontakt($odbiorca) { 
 
     if (empty($_POST['subject']) || empty($_POST['message']) || empty($_POST['email']))
@@ -113,8 +115,10 @@ function  wyslijMailKontakt($odbiorca) {
     }
 }
 
+// Wywołanie formularza
 pokazKontakt();
 
+// Funkcja do przypomnienia hasła (wysyłka na maila)
 function  przypomnijHaslo($odbiorca) { 
 
     $username = 'root';
