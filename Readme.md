@@ -17,7 +17,7 @@ Repository in the needs of "Projektowanie Aplikacji WWW" subject
   <br> 4. Run your Apache and MySQL server and open your phpMyAdmin on URL : http://localhost/phpmyadmin/
   <br> 5. Create Table `page_list` and insert neccessary records -> use page_list.sql from main folder to import the code into XAMPP phpMyAdmin
   <br> 6. Edit your URL and type : http://localhost/Application/app/ -> Here you have files to browse
-  <br> 7. Simply now, you can get to the admin panel via admin folder (URL is http://localhost/Application/app/admin/admin.php) where you have simple CRUD functions to          manage the whole site.
+  <br> 7. Simply now, you can get to the admin panel via admin folder (URL is http://localhost/Application/app/admin/admin.php) where you have simple CRUD functions to manage the whole site.
   <br> 8. URL for the main view is : http://localhost/Application/?url=home
 </p>
 
