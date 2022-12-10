@@ -4,6 +4,7 @@
 
   <?php
 
+  // Rozpoczęcie sesji i konfiguracja, aby wszystkie komunikaty wyskakiwały na ekran
   session_start();
   error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
@@ -11,7 +12,7 @@
   include("./cfg.php");
   include("./showpage.php");
   // include("./app/php/header.php");
-  // include("./app/php/footer.php");
+
 
 
   $autor = ' Igor Kawczynski<br>';
@@ -22,6 +23,7 @@
 
   // echo $autor, $przedmiot, $nr_indeksu, $nrGrupy;
 
+  // użycie switch'a i case'a -> zastąpione ifami
   // $url = $_GET['url'];
   // switch ($url) {
   //   case 'home':
@@ -67,6 +69,8 @@
   //     $url = './app/html/contact.html';
   //     include($url);
   // }
+
+  // ify służące do includowania treści stron zależnie od endpoint'a -> strony pobierane z bazy danych (Poprzez zapytanie typu SELECT)
   if ($_GET['url'] == "home")
   {
     $site = './app/html/home.html';
@@ -155,6 +159,7 @@
   //   include("./app/html/home.html");
   // }
 
+  // Jeśli jakaś strona nie istnieje -> wyrzuć komunikat
   if (file_exists($site))
   {
     return;
@@ -164,7 +169,12 @@
     throw new ErrorException($site . ": THIS SITE DOES NOT EXIST SIR !");
   }
 
+  include("./app/php/footer.php");
+
   ?>
+
+
+
 </body>
 
 </html>
