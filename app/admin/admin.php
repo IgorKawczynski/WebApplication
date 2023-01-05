@@ -1,9 +1,10 @@
 <?php
-// *******************************************************************************************************
-// *******************************************************************************************************
-// **************************************** PANEL ADMINISTRACYJNY ****************************************
-// *******************************************************************************************************
-// *******************************************************************************************************
+
+// *******************************************************************************************************************************
+// *******************************************************************************************************************************
+// **************************************************** PANEL ADMINISTRACYJNY ****************************************************
+// *******************************************************************************************************************************
+// *******************************************************************************************************************************
 
 // Funkcja do wyświetlenia ładnego tytułu u góry widoku
 function pokazTytul() {
@@ -19,17 +20,21 @@ function pokazTytul() {
     return $result;
 }
 
-//     ----------------------------------------SELECT----------------------------------------
+//     ------------------------------------------------------------ SELECT ------------------------------------------------------------
+
+// Funkcja wyświetla wszystkie podstrony poprzez zapytanie
+// 'select' z bazy danych, w której są stosowne rekordy
 function pokazWszystkiePodstrony() {
     include('cfg.php');
-    $query = " SELECT * FROM page_list ";
+    $query = " SELECT * FROM page_list "; // zapytanie typu 'select'
     $result = mysqli_query($link, $query);
-    while( $row = mysqli_fetch_array($result) ) {
+    while( $row = mysqli_fetch_array($result) ) { // dla każdego rekordu
         $id = $row['id'];
-        $page_content = htmlspecialchars($row['page_content']);
+        $page_content = htmlspecialchars($row['page_content']); // enkodowanie
         $page_title = $row['page_title'];
 
-        $table =
+        // HTML do ładnego wyświetlenia rekordów
+        $table = 
         "
         <head>
             <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
@@ -66,13 +71,16 @@ function pokazWszystkiePodstrony() {
         echo $table;
     }
 }
-//     ----------------------------------------LOGIN----------------------------------------
+//     ------------------------------------------------------------ LOGIN ------------------------------------------------------------
+
+// Funkcja z dodatkowym HTML'em do wygenerowania
+// formularzu logowania (tylko dla użytkownika niezalogowanego)
 function formularzLogowania() {
     include('cfg.php');
 
     if($_SESSION['loginFailed'] != 0) {
 
-    
+    // HTML z formularzem + bootstrap
     $result = 
     '
     <head>
@@ -131,7 +139,9 @@ return $result;
     }
 }
 
-//     ----------------------------------------UPDATE----------------------------------------
+//     ------------------------------------------------------------ UPDATE ------------------------------------------------------------
+
+// Funkcja z formularzem do edycji
 function UpdateForm() {
     include('cfg.php');
 
@@ -173,6 +183,7 @@ function UpdateForm() {
     return $update_form;
 }
 
+// Funkcja z podzapytaniem do edycji
 function queryUpdate() {
     include('cfg.php');
 
@@ -196,7 +207,9 @@ function queryUpdate() {
 }
 
 
-//     ----------------------------------------DELETE----------------------------------------
+//     ------------------------------------------------------------ DELETE ------------------------------------------------------------
+
+// Funkcja z podzapytaniem do usunięcia
 function queryDelete() {
     include('cfg.php');
     $id = $_POST['idToDelete'];
@@ -208,7 +221,9 @@ function queryDelete() {
 // Wyłączenie notice'ów i warningów
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING); 
 
-//     ----------------------------------------INSERT----------------------------------------
+//     ------------------------------------------------------------ INSERT ------------------------------------------------------------
+
+// Funkcja z formularzem do dodania nowej podstrony
 function insertForm() {
     
     include('cfg.php');
@@ -259,6 +274,7 @@ function insertForm() {
     return $insertForm;
 }
 
+// Funkcja do wykonania podzapytania
 function queryInsert() {
 
     include('cfg.php');
@@ -275,21 +291,22 @@ function queryInsert() {
 
 }
 
-
+// Wygenerowanie tytułu + formularzu z logowaniem jeśli to niezbędne
 echo pokazTytul();
 echo formularzLogowania();
 
 
 
-//    ----------------- Wywołanie Query zależnie od warunku i tylko dla zalogowanego użytkownika -----------------------
+//    ------------------------ Wywołanie Query zależnie od warunku i tylko dla zalogowanego użytkownika ------------------------------
 
+// Jeśli zalogowany
 if($_SESSION['loginFailed'] == 0) {
-
 
     echo UpdateForm();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+        // Jeśli Wykonano Update -- Wykonaj Update
         if(isset($_POST['update_id'])) {
             echo queryUpdate();
             echo "<script>";
@@ -299,6 +316,7 @@ if($_SESSION['loginFailed'] == 0) {
             exit;
         }
 
+        // Jeśli Wykonano Delete -- Wykonaj Delete
         if(isset($_POST['idToDelete'])) {
             echo queryDelete();
             echo "<script>";
@@ -308,6 +326,7 @@ if($_SESSION['loginFailed'] == 0) {
             exit;
         }
 
+        // Jeśli Wykonano Insert -- Wykonaj Insert
         if(isset($_POST['insertTitle'])) {
             echo queryInsert();
             echo "<script>";
@@ -320,12 +339,14 @@ if($_SESSION['loginFailed'] == 0) {
         }
     }
 
+    // Wygenerowanie formularzu do insert'ów + podstron jeśli to niezbędne
     pokazWszystkiePodstrony();
     echo insertForm();
 
 }
 else {
-    
+
+    // Na wypadek błędnego zalogowania się
     if((isset($_POST['username']) && $_POST['username'] != "root") && (isset($_POST['password']) && $_POST['password'] != "root")) {
         echo "<script>";
         echo "alert('Błędny Login lub Hasło !');";

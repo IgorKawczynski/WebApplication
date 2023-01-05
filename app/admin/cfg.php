@@ -27,10 +27,12 @@ if(!isset($_SESSION['loginFailed']))
     $_SESSION['loginFailed'] = 0;
   }
 
+  // na wypadek zerwania połączenia
   $link = mysqli_connect($dbhost, $dbuser, $dbpass);
   if(!$link) {
     echo'<b> Połączenie zostało zerwane! </b>';
   }
+  // na wypadek nie wybrania dobrej bazy danych
   if(!mysqli_select_db($link, $baza)) {
     echo'<b> Baza nie została wybrana! Wybierz jakąś</b>';
   }
