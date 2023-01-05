@@ -60,6 +60,10 @@ function pokazKontakt() {
                                                 <input class="btn btn-success" type="submit" value="Wyślij">
                                             </p>
 
+                                            <p style="text-align: center; margin-top: 8px;">
+                                                <a href="mailto:igor.kawczynski@help.com"> Lub wyślij bezpośrednio</a>
+                                            </p>
+
                                         </form>
 
                                     </div>
@@ -78,7 +82,11 @@ function pokazKontakt() {
 
     // Wywołaj funkcję jeśli uzupełniłeś formularz
     if (isset($_POST['email'])){
-        wyslijMailKontakt("igor12168@onet.pl");
+        echo "<script>";
+        echo "alert('Pomyślnie wysłano maila !');";
+        echo "window.location = 'http://localhost/Application/?url=home';";
+        echo "</script>" ;
+        wyslijMailKontakt("igoreses12168@onet.pl");
     }
 }
 
@@ -87,7 +95,10 @@ function  wyslijMailKontakt($odbiorca) {
 
     if (empty($_POST['subject']) || empty($_POST['message']) || empty($_POST['email']))
     {
-        echo 'Wypełnij maila !!';
+        echo "<script>";
+        echo "alert('Najpierw wypełnij maila !');";
+        echo "window.location = 'http://localhost/Application/app/php/contact.php';";
+        echo "</script>" ;
         // pokazKontakt(); // ponowne wywolanie formularza z wysłaniem wiadomości mail ---> zapętlone błędnie
     }
     else
@@ -105,9 +116,9 @@ function  wyslijMailKontakt($odbiorca) {
         $header .= "Return-Path: <". $mail['sender'].">\n";
 
         // Do poprawnego wysłania maila potrzeba skonfigurowanego SMTP...
-        ini_set('SMTP', "smtp.gmail.com");
-        ini_set('smtp_port', "25");
-        ini_set('sendmail_from', "kluseczkiwujka94@gmail.com");
+        // ini_set('SMTP', "smtp.gmail.com");
+        // ini_set('smtp_port', "25");
+        // ini_set('sendmail_from', "kluseczkiwujka94@gmail.com");
 
         mail($mail['reciptient'], $mail['subject'], $mail['body'], $header);
 
@@ -144,6 +155,10 @@ echo 'Email do przypomnienia hasla<input type="text" class="form-control" name="
 echo '<p><form action="" method="POST"><button class="btn btn-info" name="password">Przypomnij haslo</button></form></p>';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['password'])) {
+        echo "<script>";
+        echo "alert('Na maila otrzymałeś wiadomość z kodem !');";
+        echo "window.location = 'http://localhost/Application/?url=home';";
+        echo "</script>" ;
         przypomnijHaslo($_POST['emailTOP@gmejl.com']);
     }
 }
