@@ -1,0 +1,11 @@
+************************************************************
+************************************************************
+*********************** Do zrobienia ***********************
+************************************************************
+************************************************************
+
+1. Dla panelu administracyjnego :
+    a) utworzenie oddzielnego widoków dla wyświetlenia wszystkich podstron po zalogowaniu
+    b) utworzenie oddzielnego widoku dla dodania podstrony po zalogowaniu
+    c) modyfikacja insertForm tak, aby po dodaniu podstrony następywało odpowiednie przekierowanie
+    d) refaktoryzacja, wyrzucenie niepotrzebnego kodu...
