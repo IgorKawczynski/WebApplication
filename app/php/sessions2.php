@@ -1,3 +1,4 @@
+<!-- LAB4 -->
 <?php
     session_start();
 ?>

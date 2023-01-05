@@ -158,10 +158,10 @@ li.dropdown {
 }
 
 .footer-start {
-    margin-top:auto;
+    margin-top: auto;
     width: auto;
     background-color: rgb(38, 38, 41);
-    color:white;
+    color: white;
 }
 
 .footer-end {
@@ -169,7 +169,7 @@ li.dropdown {
     width: auto;
     width: 100%;
     background-color: rgb(38, 38, 41);
-    color:white;
+    color: white;
 }
 
 .form4 {

@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-.body{
+.body {
   background-attachment: fixed;
   background-size: auto;
 }
@@ -206,7 +206,7 @@ li.dropdown {
 }
 
 .footer {
-  position: relative;
+  position: absolute;
   width: 100%;
   text-align: center;
   background-color: white;
@@ -219,8 +219,8 @@ li.dropdown {
 }
 
 .footer-end {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
   width: auto;
   width: 100%;
   background-color: rgb(38, 38, 41);

@@ -1,3 +1,8 @@
+// Funkcje do trzech animacji ->
+// 1. Do powiększenia przy jednorazowym kliknięciu w blok
+// 2. Do powiększania przy każdym najechaniu kursorem w blok
+// 3. Do powiększania i rozjaśniania przy każdym kliknięciu w blok
+
 function animation1() {
     $("#btn1").on("click", function () {
         $(this).animate({
@@ -7,9 +12,9 @@ function animation1() {
             borderWidth: "10px"
         }, 1500);
     });
-    }
-    
-    function animation2() {
+}
+
+function animation2() {
     $("#btn2").on({
         "mouseover": function () {
             $(this).animate({
@@ -22,10 +27,10 @@ function animation1() {
             }, 800);
         }
     });
-    }
-    
-    
-    function animation3() {
+}
+
+
+function animation3() {
     $("#btn3").on("click", function () {
         if (!$(this).is(":animated")) {
             $(this).animate({
@@ -36,4 +41,4 @@ function animation1() {
             });
         }
     });
-    }
+}

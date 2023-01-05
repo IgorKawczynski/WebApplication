@@ -1,3 +1,5 @@
+<!-- LAB4 -->
+
 <?php
 
     $przedmiot = ' Programowanie Aplikacji WWW ';
