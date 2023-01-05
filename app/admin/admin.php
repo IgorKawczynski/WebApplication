@@ -179,6 +179,7 @@ function queryUpdate() {
     $title = $_POST['update_title'];
     $content = $_POST['update_content'];
 
+
     // Dekodowanie w momencie pobierania zmiennej $content -- z uwagi na to, że query enkoduje znaki html'owe typu '<' lub ' " '...
     $query = "UPDATE `page_list` SET `page_title`='".$title."' , `page_content`=' ".html_entity_decode($content)." ' WHERE `id`=".$id." LIMIT 1";
     
@@ -263,7 +264,9 @@ function queryInsert() {
     
     $title = $_POST['insertTitle'];
     $content = $_POST['insertContent'];
+
     // $content = htmlspecialchars($content, ENT_HTML401);
+
     $query = "INSERT INTO `page_list` (`page_title`, `page_content`) values('$title', '$content')";
     $result = mysqli_query($link, $query);
 
