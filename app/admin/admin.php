@@ -141,6 +141,7 @@ function UpdateForm() {
 
     $id = $_POST['idP'];
     $title = $_POST['titleP'];
+    // enkodowanie HTML'owe
     $content = htmlspecialchars($_POST['contentP']);
 
 
@@ -284,6 +285,7 @@ echo formularzLogowania();
 
 if($_SESSION['loginFailed'] == 0) {
 
+
     echo UpdateForm();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -323,7 +325,14 @@ if($_SESSION['loginFailed'] == 0) {
 
 }
 else {
-    echo "!!! Nie jesteś zalogowany !!!";
+    
+    if((isset($_POST['username']) && $_POST['username'] != "root") && (isset($_POST['password']) && $_POST['password'] != "root")) {
+        echo "<script>";
+        echo "alert('Błędny Login lub Hasło !');";
+        echo "</script>" ;
+    }
+
+    echo "Zaloguj się najpierw !";
 }
 
 ?>
