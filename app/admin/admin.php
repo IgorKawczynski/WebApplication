@@ -265,7 +265,7 @@ function queryInsert() {
     $title = $_POST['insertTitle'];
     $content = $_POST['insertContent'];
 
-    // $content = htmlspecialchars($content, ENT_HTML401);
+    // enkodowanie pod HTML'a --> $content = htmlspecialchars($content, ENT_HTML401);
 
     $query = "INSERT INTO `page_list` (`page_title`, `page_content`) values('$title', '$content')";
     $result = mysqli_query($link, $query);
@@ -290,16 +290,30 @@ if($_SESSION['loginFailed'] == 0) {
 
         if(isset($_POST['update_id'])) {
             echo queryUpdate();
+            echo "<script>";
+            echo "alert('Pomyślnie zaaktualizowano stronę ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
             exit;
         }
 
         if(isset($_POST['idToDelete'])) {
             echo queryDelete();
+            echo "<script>";
+            echo "alert('Pomyślnie usunięto stronę ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
             exit;
         }
 
         if(isset($_POST['insertTitle'])) {
             echo queryInsert();
+            echo "<script>";
+            echo "alert('Pomyślnie dodano nową stronę ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            // header("Location: http://localhost/Application/?url=home");
+            // console.log("DODANO NOWĄ STRONĘ! ");
+            echo "</script>" ;
             exit;
         }
     }
