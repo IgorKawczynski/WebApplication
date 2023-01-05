@@ -82,10 +82,6 @@ function pokazKontakt() {
 
     // Wywołaj funkcję jeśli uzupełniłeś formularz
     if (isset($_POST['email'])){
-        echo "<script>";
-        echo "alert('Pomyślnie wysłano maila !');";
-        echo "window.location = 'http://localhost/Application/?url=home';";
-        echo "</script>" ;
         wyslijMailKontakt("igoreses12168@onet.pl");
     }
 }
@@ -103,6 +99,11 @@ function  wyslijMailKontakt($odbiorca) {
     }
     else
     {
+        echo "<script>";
+        echo "alert('Pomyślnie wysłano maila !');";
+        echo "window.location = 'http://localhost/Application/?url=home';";
+        echo "</script>" ;
+
         $mail['subject'] = $_POST['subject'];
         $mail['body'] =  $_POST['message'];
         $mail['sender'] = $_POST['email'];
