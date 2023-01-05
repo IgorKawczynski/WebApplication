@@ -154,17 +154,15 @@ li.dropdown {
 
 #tableAssists {
     margin-bottom: 0;
-    background: url('./assets/assists.jpg')
 }
 
 #tableCleanSheets {
     margin-bottom: 0;
-    background: url('./assets/cleansheets2.jpg')
 }
 
 #tableGoals {
     margin-bottom: 0;
-    background: url('./assets/goals.jpg')
+
 }
 
 .table tr {
