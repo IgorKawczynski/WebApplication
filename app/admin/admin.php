@@ -356,4 +356,258 @@ else {
     echo "Zaloguj się najpierw !";
 }
 
+
+
+
+function list_categories() {
+
+    include "cfg.php";
+
+    $query="SELECT * FROM category WHERE mother = 0";
+
+    $result=mysqli_query($link, $query);
+
+    while($row = mysqli_fetch_array($result)) {
+
+        $id=$row['id'];
+        $parent = $row['mother'];
+        $name=$row['name'];
+
+        $child_query = "SELECT * FROM category WHERE mother = $id";
+
+        $child_categories = mysqli_query($link, $child_query);
+
+        $page_result  = "
+        <head>
+            <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
+        </head>
+
+        <div style='margin: auto; width: 10%;'>
+        <div>
+            <table>
+                <thead>
+                    <th><span>ID</span></th>
+                    <th><span>NAZWA</span></th>
+                    <th><span>actions</span></th>
+                </thead>
+                <tbody>
+                    <tr> 
+                    <td>".$id."</td>
+                    <td>".$name."</td>
+                    <td><form method='post'>
+                        <input type='hidden' name='category_id' value='".$id."'/>
+                        <input type='hidden' name='category_mother' value='".$mother."'/>
+                        <input type='hidden' name='category_name' value='".$name."'/>
+                        <input type='submit' name='edit' value='Edit'/>
+                    </form>
+                    <form method='post'>
+                        <input type='hidden' name='category_to_delete_id' value='".$id."'/>
+                        <input type='submit' name='delete' value='Delete'/>
+                    </form></td>
+                    </tr>       
+                </tbody>
+            </table>
+            
+        </div>
+        
+        </div>
+        <br>
+        ";
+        echo $page_result;
+        while ($child_row = mysqli_fetch_array($child_categories)) {
+
+            $child_id = $child_row['id'];
+            $child_mother = $child_row['mother'];
+            $child_name = $child_row['name'];
+
+            $wallpaper = './../assets/real-madrid-logo-wallpaper.jpg';
+            $style = '';
+
+            if($child_mother == 1) {
+                $wallpaper = '../../assets/real-madrid-logo-wallpaper.jpg';
+                $style = 'color: black; font-size: 40px;';
+
+            }
+            if($child_mother == 2) {
+                $wallpaper = '../../assets/barca-logo-wallpaper.jpg';
+                $style = 'color: white; font-size: 40px;';
+            }
+            if($child_mother == 3) {
+                $wallpaper = '../../assets/united-logo-wallpaper.jpg';
+                $style = 'color: white; font-size: 40px;';
+            }
+            if($child_mother == 4) {
+                $wallpaper = '../../assets/city-logo-wallpaper.png';
+                $style = 'color: white; font-size: 40px;';
+            }
+            if($child_mother == 5) {
+                $wallpaper = '../../assets/arsenal-logo-wallpaper.png';
+                $style = 'color: white; font-size: 40px;';
+            }
+            if($child_mother == 6) {
+                $wallpaper = '../../assets/psg-logo-wallpaper.jpg';
+                $style = 'color: white; font-size: 40px;';
+            }
+            if($child_mother == 7) {
+                $wallpaper = '../../assets/chelsea-logo-wallpaper.jpg';
+                $style = 'color: white; font-size: 40px;';
+            }
+            if($child_mother == 8) {
+                $wallpaper = '../../assets/bayern-logo-wallpaper.jpg';
+                $style = 'color: white; font-size: 40px;';
+            }
+
+            $children_result = "
+            <head>
+                <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
+            </head>
+
+            <body>
+                <table id='tableCategories' class='table table-hover' background='./assets/anfield.jpeg'>
+                    <thead>
+                        <tr style='background-color: #333; color: white;'>
+                            <th style='margin: auto; width: 15%;' scope='col'>Numer Zawodnika</th>
+                            <th style='margin: auto; width: 15%;' scope='col'>Klub przynależący</th>
+                            <th style='margin: auto; width: 52%;' scope='col'>Imię</th>
+                            <th scope='col'>Zarządzaj</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr background=".$wallpaper." style='color: white; opacity: 0.8;'>
+                            <td style='".$style."'>".$child_id."</td> 
+                            <td style='".$style."'>".$child_mother."</td>
+                            <td style='".$style."'>".$child_name."</td>
+                            <td>
+                                <form method='post'>
+                                    <input type='hidden' name='category_id' value='".$child_id."'/>
+                                    <input type='hidden' name='category_mother' value='".$child_mother."'/>
+                                    <input type='hidden' name='category_name' value='".$child_name."'/>
+                                    <button type='submit' name='edit' class='btn btn-warning'>Edytuj zawodnika</button>
+                                </form>
+                                <form method='post'>
+                                    <input type='hidden' name='category_to_delete_id' value='".$child_id."'/>
+                                    <button type='submit' name='delete' class='btn btn-danger'>Skasuj zawodnika</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </body>
+        ";
+
+        echo $children_result;
+        }
+
+    }
+}
+
+
+
+// function list_categories() {
+
+//     include "cfg.php";
+
+//     $query="SELECT * FROM category WHERE mother = 0";
+
+//     $result=mysqli_query($link, $query);
+
+//     while($row = mysqli_fetch_array($result)) {
+
+//         $id=$row['id'];
+//         $parent = $row['mother'];
+//         $name=$row['name'];
+
+//         $child_query = "SELECT * FROM category WHERE mother = $id";
+
+//         $child_categories = mysqli_query($link, $child_query);
+
+//         $page_result  = "
+//         <div style='margin: auto; width: 10%;'>
+//         <div>
+//             <table>
+//                 <thead>
+//                     <th><span>ID</span></th>
+//                     <th><span>NAZWA</span></th>
+//                     <th><span>actions</span></th>
+//                 </thead>
+//                 <tbody>
+//                     <tr> 
+//                     <td>".$id."</td>
+//                     <td>".$name."</td>
+//                     <td><form method='post'>
+//                         <input type='hidden' name='category_id' value='".$id."'/>
+//                         <input type='hidden' name='category_mother' value='".$mother."'/>
+//                         <input type='hidden' name='category_name' value='".$name."'/>
+//                         <input type='submit' name='edit' value='Edit'/>
+//                     </form>
+//                     <form method='post'>
+//                         <input type='hidden' name='category_to_delete_id' value='".$id."'/>
+//                         <input type='submit' name='delete' value='Delete'/>
+//                     </form></td>
+//                     </tr>       
+//                 </tbody>
+//             </table>
+            
+//         </div>
+        
+//         </div>
+//         <br>
+//         ";
+//         echo $page_result;
+//         while ($child_row = mysqli_fetch_array($child_categories)) {
+
+//             $child_id = $child_row['id'];
+//             $child_mother = $child_row['mother'];
+//             $child_name = $child_row['name'];
+
+//             $children_result = "
+//             <div style='margin: auto; width: 10%;'>
+//             <div >
+//                 <table>
+//                     <thead>
+//                         <th><span >ID</span></th>
+//                         <th><span >MATKA</span></th>
+//                         <th><span >NAZWA</span></th>
+//                         <th><span>actions</span></th>
+//                     </thead>
+//                     <tbody>
+//                         <tr> 
+//                         <td >".$child_id."</td> 
+//                         <td >".$child_mother."</td>
+//                         <td >".$child_name."</td>
+//                         <td><form method='post'>
+//                             <input type='hidden' name='category_id' value='".$child_id."'/>
+//                             <input type='hidden' name='category_mother' value='".$child_mother."'/>
+//                             <input type='hidden' name='category_name' value='".$child_name."'/>
+//                             <input type='submit' name='edit' value='Edit'/>
+//                         </form>
+//                         <form method='post'>
+//                             <input type='hidden' name='category_to_delete_id' value='".$child_id."'/>
+//                             <input type='submit' name='delete' value='Delete'/>
+//                         </form>
+//                         <form method='post'>
+//                             <input type='hidden' name='product_category' value='".$child_id."'/>
+//                             <input type='submit' name='new_product' value='Add product'/>
+//                         </form>
+//                         </td>
+//                         </tr>
+//                     </tbody>
+//                 </table>
+                
+//             </div>
+           
+//             </div>
+//             <br>
+//         ";
+
+//         echo $children_result;
+//         echo "<br>";
+//         }
+//         echo "<br><hr style='height: 2px; background: red'><br>";
+
+//     }
+// }
+
+list_categories();
+
 ?>
