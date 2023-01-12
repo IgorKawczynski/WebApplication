@@ -20,7 +20,7 @@ function pokazTytul() {
     return $result;
 }
 
-//     ------------------------------------------------------------ SELECT ------------------------------------------------------------
+//     ------------------------------------------------------ SELECT PODSTRON ------------------------------------------------------
 
 // Funkcja wyświetla wszystkie podstrony poprzez zapytanie
 // 'select' z bazy danych, w której są stosowne rekordy
@@ -71,7 +71,7 @@ function pokazWszystkiePodstrony() {
         echo $table;
     }
 }
-//     ------------------------------------------------------------ LOGIN ------------------------------------------------------------
+//     ---------------------------------------------------------- LOGIN ----------------------------------------------------------
 
 // Funkcja z dodatkowym HTML'em do wygenerowania
 // formularzu logowania (tylko dla użytkownika niezalogowanego)
@@ -139,7 +139,7 @@ return $result;
     }
 }
 
-//     ------------------------------------------------------------ UPDATE ------------------------------------------------------------
+//     ------------------------------------------------------ UPDATE PODSTRON -----------------------------------------------------
 
 // Funkcja z formularzem do edycji
 function UpdateForm() {
@@ -159,7 +159,7 @@ function UpdateForm() {
     "
         <div>
         <div>
-            <h1>Edytuj strone ".$title." #".$id."</h1>
+            <h1>Edytuj strone ".$title." o ID : ".$id."</h1>
             <form method='post'>
             <table style='width:100%; height: 400px'>
                 <thead>
@@ -207,9 +207,9 @@ function queryUpdate() {
 }
 
 
-//     ------------------------------------------------------------ DELETE ------------------------------------------------------------
+//     ------------------------------------------------------ DELETE PODSTRON ------------------------------------------------------
 
-// Funkcja z podzapytaniem do usunięcia
+// Funkcja z podzapytaniem do usunięcia podstron
 function queryDelete() {
     include('cfg.php');
     $id = $_POST['idToDelete'];
@@ -221,7 +221,7 @@ function queryDelete() {
 // Wyłączenie notice'ów i warningów
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING); 
 
-//     ------------------------------------------------------------ INSERT ------------------------------------------------------------
+//     ------------------------------------------------------ INSERT PODSTRON ------------------------------------------------------
 
 // Funkcja z formularzem do dodania nowej podstrony
 function insertForm() {
@@ -303,6 +303,7 @@ echo formularzLogowania();
 if($_SESSION['loginFailed'] == 0) {
 
     echo UpdateForm();
+    echo UpdateCategoryForm();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -337,28 +338,81 @@ if($_SESSION['loginFailed'] == 0) {
             echo "</script>" ;
             exit;
         }
+
+        // Jeśli Wykonano Update Kategorii -- Wykonaj Update Kategorii
+        if(isset($_POST['update_category_id'])) {
+            echo queryUpdateCategory();
+            echo "<script>";
+            echo "alert('Pomyślnie zaaktualizowano kategorię ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
+            exit;
+        }
+
+        // Jeśli Wykonano Delete kategorii -- Wykonaj Delete kategorii
+        if(isset($_POST['categoryIDdelete'])) {
+            echo queryDeleteCategory();
+            echo "<script>";
+            echo "alert('Pomyślnie usunięto kategorię ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
+            exit;
+        }
+
+        // Jeśli Wykonano Insert kategorii -- Wykonaj Insert kategorii
+        if(isset($_POST['insertMother'])) {
+            echo queryInsertCategory();
+            echo "<script>";
+            echo "alert('Pomyślnie dodano kategorię ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
+            exit;
+        }
     }
 
     // Wygenerowanie formularzu do insert'ów + podstron jeśli to niezbędne
     pokazWszystkiePodstrony();
+    // Formularz z insertem dla podstron
     echo insertForm();
+    // Wyświetlenie wszystkich KATEGORII oraz PODKATEGORII
+    list_categories();
+     // Formularz z insertem dla kategorii/podkategorii
+    echo insertFormCategory();
 
 }
 else {
-
     // Na wypadek błędnego zalogowania się
     if((isset($_POST['username']) && $_POST['username'] != "root") && (isset($_POST['password']) && $_POST['password'] != "root")) {
         echo "<script>";
         echo "alert('Błędny Login lub Hasło !');";
         echo "</script>" ;
     }
-
     echo "Zaloguj się najpierw !";
 }
 
 
 
+//    ------------------------------------------------ KATEGORIE ------------------------------------------------------
 
+// Aktualne rekordy w mojej bazie danych (kluby oraz ich zawodnicy) :
+// Kategorie i podkategorie 
+// Real Madryt      Barcelona       United         City        Arsenal         PSG          Chelsea              Bayern
+//     |                |              |             |            |             |              |                   |
+// Courtouis        Ter Stegen      De Gea         Stones       Saka          Mbappe        Sterling              Mane
+// Carvajal         Araujo          Varane         De Bruyne    Odegaard      Messi         Aubameyang            Sane
+// Kroos            Alba            Fernandes      Silva        Jesus         Neymar        Fofana                Neuer
+// Modrić           Busquets        Casemiro       Foden        Martinelli    Ramos         Kante N'golo          Mueller
+// Benzema          Pedri           Rashford       Mahrez                                   Mount                 Musiala
+// Vini Jr          Lewandowski     Martial        Haaland                                  Cucurella             Coman
+// Camavinga        Raphinha                       Alvarez                                  Koulibaly             Gnabry
+// Militao          Dembele                        Walker                                                         De Light
+// Alaba            
+
+
+//     ----------------------------------------------------- SELECT KATEGORII -----------------------------------------------------
+
+
+// Metoda do wyświetlenia wszystkich kategorii oraz podkategorii z bazy danych
 function list_categories() {
 
     include "cfg.php";
@@ -367,6 +421,7 @@ function list_categories() {
 
     $result=mysqli_query($link, $query);
 
+    // Główna pętla
     while($row = mysqli_fetch_array($result)) {
 
         $id=$row['id'];
@@ -377,43 +432,48 @@ function list_categories() {
 
         $child_categories = mysqli_query($link, $child_query);
 
+        $wallpaper = './../assets/liverpool.png';
+
+        // HTML pod wyświetlenie kategorii
         $page_result  = "
         <head>
             <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
         </head>
 
-        <div style='margin: auto; width: 10%;'>
-        <div>
-            <table>
+        <br><br><br><br>
+        <div style='margin: auto; width: 30%;'>
+            <table id='tableUnderCategories' class='table table-hover'>
                 <thead>
-                    <th><span>ID</span></th>
-                    <th><span>NAZWA</span></th>
-                    <th><span>actions</span></th>
+                    <tr style='background-color: #333; color: white;'>
+                        <th style='margin: auto; width: 15%;' scope='col'>ID KLUBU</th>
+                        <th style='margin: auto; width: 15%;' scope='col'>NAZWA KLUBU</th>
+                        <th style='margin: auto; width: 15%;' scope='col'>ZARZĄDZAJ</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr> 
-                    <td>".$id."</td>
-                    <td>".$name."</td>
-                    <td><form method='post'>
-                        <input type='hidden' name='category_id' value='".$id."'/>
-                        <input type='hidden' name='category_mother' value='".$mother."'/>
-                        <input type='hidden' name='category_name' value='".$name."'/>
-                        <input type='submit' name='edit' value='Edit'/>
-                    </form>
-                    <form method='post'>
-                        <input type='hidden' name='category_to_delete_id' value='".$id."'/>
-                        <input type='submit' name='delete' value='Delete'/>
-                    </form></td>
+                    <tr background=".$wallpaper." style='color: white; opacity: 0.8;'> 
+                        <td>".$id."</td>
+                        <td>".$name."</td>
+                        <td>
+                            <form method='post'>
+                                <input type='hidden' name='categoryID' value='".$id."'/>
+                                <input type='hidden' name='categoryMother' value='".$mother."'/>
+                                <input type='hidden' name='categoryName' value='".$name."'/>
+                                <button type='submit' name='edit' class='btn btn-warning'>Edytuj Kategorię</button>
+                            </form>
+                            <form method='post'>
+                                <input type='hidden' name='categoryIDdelete' value='".$id."'/>
+                                <button type='submit' name='delete' class='btn btn-danger'>Usuń Kategorię</button>
+                            </form>
+                        </td>
                     </tr>       
                 </tbody>
             </table>
-            
         </div>
-        
-        </div>
-        <br>
         ";
         echo $page_result;
+
+        // Pętla dla podkategorii
         while ($child_row = mysqli_fetch_array($child_categories)) {
 
             $child_id = $child_row['id'];
@@ -423,6 +483,7 @@ function list_categories() {
             $wallpaper = './../assets/real-madrid-logo-wallpaper.jpg';
             $style = '';
 
+            // Warunki pod zmianę tapety i stylów dla poszczególnych podkategorii (wszystko zależne od id matki)
             if($child_mother == 1) {
                 $wallpaper = '../../assets/real-madrid-logo-wallpaper.jpg';
                 $style = 'color: black; font-size: 40px;';
@@ -457,13 +518,14 @@ function list_categories() {
                 $style = 'color: white; font-size: 40px;';
             }
 
+            // HTML pod wyświetlenie podkategorii
             $children_result = "
             <head>
                 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
             </head>
 
             <body>
-                <table id='tableCategories' class='table table-hover' background='./assets/anfield.jpeg'>
+                <table id='tableUnderCategories' class='table table-hover'>
                     <thead>
                         <tr style='background-color: #333; color: white;'>
                             <th style='margin: auto; width: 15%;' scope='col'>Numer Zawodnika</th>
@@ -479,13 +541,13 @@ function list_categories() {
                             <td style='".$style."'>".$child_name."</td>
                             <td>
                                 <form method='post'>
-                                    <input type='hidden' name='category_id' value='".$child_id."'/>
-                                    <input type='hidden' name='category_mother' value='".$child_mother."'/>
-                                    <input type='hidden' name='category_name' value='".$child_name."'/>
+                                    <input type='hidden' name='categoryID' value='".$child_id."'/>
+                                    <input type='hidden' name='categoryMother' value='".$child_mother."'/>
+                                    <input type='hidden' name='categoryName' value='".$child_name."'/>
                                     <button type='submit' name='edit' class='btn btn-warning'>Edytuj zawodnika</button>
                                 </form>
                                 <form method='post'>
-                                    <input type='hidden' name='category_to_delete_id' value='".$child_id."'/>
+                                    <input type='hidden' name='categoryIDdelete' value='".$child_id."'/>
                                     <button type='submit' name='delete' class='btn btn-danger'>Skasuj zawodnika</button>
                                 </form>
                             </td>
@@ -501,113 +563,151 @@ function list_categories() {
     }
 }
 
+//     ----------------------------------------------------- UPDATE KATEGORII -----------------------------------------------------
 
 
-// function list_categories() {
+// Funkcja z formularzem do edycji dla KATEGORII/PODKATEGORII
+function UpdateCategoryForm() {
 
-//     include "cfg.php";
+    include('cfg.php');
+    if(empty($_POST['categoryID'])) {
+        // console.log("UPDATE KATEGORII START");
+        return "";
+    }
 
-//     $query="SELECT * FROM category WHERE mother = 0";
+    $id = $_POST['categoryID'];
+    $mother = $_POST['categoryMother'];
+    // enkodowanie HTML'owe
+    $name = htmlspecialchars($_POST['categoryName']);
 
-//     $result=mysqli_query($link, $query);
 
-//     while($row = mysqli_fetch_array($result)) {
+    $update_form = 
+    "
+        <div>
+        <div>
+            <h1>Edytuj Kategorię/Podkategorię ".$name." o ID : ".$id."</h1>
+            <form method='post'>
+            <table style='width:100%; height: 400px'>
+                <thead>
+                    <th><span class='text'>ID</span></th>
+                    <th><span class='text'>Matka</span></th>
+                    <th><span class='text' id='content'>Nazwa</span></th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type='text' readonly value='".$id."' name='update_category_id'/></td>
+                        <td><input type='text' name='update_category_mother' value='".$mother."'/></td>
+                        <td><textarea style='height: 98%; width: 99%' name='update_category_name'>".$name." </textarea></td>
+                    </tr>       
+                </tbody>
+            </table>
+            <button type='submit' class='btn btn-primary'>Zapisz</button>
+            </form>
+        </div>
+        </div>
+        ";
+    return $update_form;
+}
 
-//         $id=$row['id'];
-//         $parent = $row['mother'];
-//         $name=$row['name'];
+// Funkcja z podzapytaniem do edycji (dla kategorii)
+function queryUpdateCategory() {
+    include('cfg.php');
 
-//         $child_query = "SELECT * FROM category WHERE mother = $id";
+    $id = $_POST['update_category_id'];
+    $mother = $_POST['update_category_mother'];
+    $name = $_POST['update_category_name'];
 
-//         $child_categories = mysqli_query($link, $child_query);
+    // Dekodowanie w momencie pobierania zmiennej $content -- z uwagi na to, że query enkoduje znaki html'owe typu '<' lub ' " '...
+    $query = "UPDATE `category` SET `mother`='".$mother."' , `name`=' ".html_entity_decode($name)." ' WHERE `id`=".$id." LIMIT 1";
+    
+    // W zapytaniach typu UPDATE, DELETE, SELECT zawsze używaj na koocu parametru LIMIT, np.
+    // dla potrzeby naszego projektu CMSa należy użyd LIMIT 1, oznacza to że modyfikacji ulegnie pierwszy
+    // znaleziony rekord. W przypadku gdy warunek jest „nieszczelny”, i brakuje opcji LIMIT, można
+    // „wysadzid” sobie całą bazę – historia pełna jest takich przypadków. Chodzi o sytuacje, gdzie np.
+    // wszystkie treści strony przez przypadek, lub w wyniku ataku SQL INJECTION są zastępowane np. NULLem
+    $result = mysqli_query($link, $query);
+    return $result;
+}
 
-//         $page_result  = "
-//         <div style='margin: auto; width: 10%;'>
-//         <div>
-//             <table>
-//                 <thead>
-//                     <th><span>ID</span></th>
-//                     <th><span>NAZWA</span></th>
-//                     <th><span>actions</span></th>
-//                 </thead>
-//                 <tbody>
-//                     <tr> 
-//                     <td>".$id."</td>
-//                     <td>".$name."</td>
-//                     <td><form method='post'>
-//                         <input type='hidden' name='category_id' value='".$id."'/>
-//                         <input type='hidden' name='category_mother' value='".$mother."'/>
-//                         <input type='hidden' name='category_name' value='".$name."'/>
-//                         <input type='submit' name='edit' value='Edit'/>
-//                     </form>
-//                     <form method='post'>
-//                         <input type='hidden' name='category_to_delete_id' value='".$id."'/>
-//                         <input type='submit' name='delete' value='Delete'/>
-//                     </form></td>
-//                     </tr>       
-//                 </tbody>
-//             </table>
-            
-//         </div>
-        
-//         </div>
-//         <br>
-//         ";
-//         echo $page_result;
-//         while ($child_row = mysqli_fetch_array($child_categories)) {
+//     ----------------------------------------------------- DELETE KATEGORII -----------------------------------------------------
 
-//             $child_id = $child_row['id'];
-//             $child_mother = $child_row['mother'];
-//             $child_name = $child_row['name'];
 
-//             $children_result = "
-//             <div style='margin: auto; width: 10%;'>
-//             <div >
-//                 <table>
-//                     <thead>
-//                         <th><span >ID</span></th>
-//                         <th><span >MATKA</span></th>
-//                         <th><span >NAZWA</span></th>
-//                         <th><span>actions</span></th>
-//                     </thead>
-//                     <tbody>
-//                         <tr> 
-//                         <td >".$child_id."</td> 
-//                         <td >".$child_mother."</td>
-//                         <td >".$child_name."</td>
-//                         <td><form method='post'>
-//                             <input type='hidden' name='category_id' value='".$child_id."'/>
-//                             <input type='hidden' name='category_mother' value='".$child_mother."'/>
-//                             <input type='hidden' name='category_name' value='".$child_name."'/>
-//                             <input type='submit' name='edit' value='Edit'/>
-//                         </form>
-//                         <form method='post'>
-//                             <input type='hidden' name='category_to_delete_id' value='".$child_id."'/>
-//                             <input type='submit' name='delete' value='Delete'/>
-//                         </form>
-//                         <form method='post'>
-//                             <input type='hidden' name='product_category' value='".$child_id."'/>
-//                             <input type='submit' name='new_product' value='Add product'/>
-//                         </form>
-//                         </td>
-//                         </tr>
-//                     </tbody>
-//                 </table>
-                
-//             </div>
-           
-//             </div>
-//             <br>
-//         ";
+// Funkcja z podzapytaniem do usunięcia kategorii/podkategorii
+function queryDeleteCategory() {
+    include('cfg.php');
+    $id = $_POST['categoryIDdelete'];
+    $query = "DELETE FROM `category` WHERE id=$id LIMIT 1";
+    $result = mysqli_query($link, $query);
+    return $result;
+}
 
-//         echo $children_result;
-//         echo "<br>";
-//         }
-//         echo "<br><hr style='height: 2px; background: red'><br>";
 
-//     }
-// }
+//     ----------------------------------------------------- INSERT KATEGORII -----------------------------------------------------
 
-list_categories();
+
+// Funkcja z formularzem do dodania nowej podstrony
+function insertFormCategory() {
+    
+    include('cfg.php');
+
+    $insertForm =
+        '<div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Dodaj Kolejną Kategorię</p>
+
+                                <form method="post" class="mx-1 mx-md-4">
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="text" name="insertMother"/>
+                                            <label class="form-label" for="form3">ID Matki</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <textarea style="height: 85%; width: 85%" name="insertName"></textarea>
+                                            <label class="form-label" for="form3_2">Nazwa Kategorii</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="status" style="text-align: center">
+                                    </div>
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button type="submit" class="btn btn-success" name="insert">Dodaj Kategorię</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>';
+
+    return $insertForm;
+}
+
+// Funkcja do wykonania podzapytania typu INSERT dla kategorii/podkategorii
+function queryInsertCategory() {
+
+    include('cfg.php');
+    
+    $mother = $_POST['insertMother'];
+    $name = $_POST['insertName'];
+
+    $query = "INSERT INTO `category` (`mother`, `name`) values('$mother', '$name')";
+    $result = mysqli_query($link, $query);
+
+    return $result;
+}
 
 ?>
