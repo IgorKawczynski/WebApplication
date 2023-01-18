@@ -2,9 +2,12 @@
 
 // *******************************************************************************************************************************
 // *******************************************************************************************************************************
+// *******************************************************************************************************************************
 // **************************************************** PANEL ADMINISTRACYJNY ****************************************************
 // *******************************************************************************************************************************
 // *******************************************************************************************************************************
+// *******************************************************************************************************************************
+
 
 // Funkcja do wyświetlenia ładnego tytułu u góry widoku
 function pokazTytul() {
@@ -20,11 +23,16 @@ function pokazTytul() {
     return $result;
 }
 
+// ******************************************************************************************************************************
+// ********************************************************** PODSTRONY *********************************************************
+// ******************************************************************************************************************************
+
 //     ------------------------------------------------------ SELECT PODSTRON ------------------------------------------------------
 
 // Funkcja wyświetla wszystkie podstrony poprzez zapytanie
 // 'select' z bazy danych, w której są stosowne rekordy
 function pokazWszystkiePodstrony() {
+     // Dołączenie configu z bazą danych
     include('cfg.php');
     $query = " SELECT * FROM page_list "; // zapytanie typu 'select'
     $result = mysqli_query($link, $query);
@@ -76,6 +84,7 @@ function pokazWszystkiePodstrony() {
 // Funkcja z dodatkowym HTML'em do wygenerowania
 // formularzu logowania (tylko dla użytkownika niezalogowanego)
 function formularzLogowania() {
+     // Dołączenie configu z bazą danych
     include('cfg.php');
 
     if($_SESSION['loginFailed'] != 0) {
@@ -143,6 +152,7 @@ return $result;
 
 // Funkcja z formularzem do edycji
 function UpdateForm() {
+     // Dołączenie configu z bazą danych
     include('cfg.php');
 
     if(empty($_POST['idP'])) {
@@ -157,39 +167,42 @@ function UpdateForm() {
 
     $update_form = 
     "
-        <div>
+    <br>
+    <div>
         <div>
             <h1>Edytuj strone ".$title." o ID : ".$id."</h1>
             <form method='post'>
-            <table style='width:100%; height: 400px'>
-                <thead>
-                    <th><span class='text'>id</span></th>
-                    <th><span class='text'>title</span></th>
-                    <th><span class='text' id='content'>Content</span></th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type='text' readonly value='".$id."' name='update_id'/></td>
-                        <td><input type='text' name='update_title' value='".$title."'/></td>
-                        <td><textarea style='height: 98%; width: 99%' name='update_content'>".$content." </textarea></td>
-                    </tr>       
-                </tbody>
-            </table>
-            <button type='submit' class='btn btn-primary'>Zapisz</button>
+                <table class='table table-responsive-sm table-hover table-dark' style='width:100%; height: 400px'>
+                    <thead class='table-dark'>
+                        <th><span class='text'>id</span></th>
+                        <th><span class='text'>title</span></th>
+                        <th><span class='text' id='content'>Content</span></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type='text' readonly value='".$id."' name='updateId'/></td>
+                            <td><input type='text' name='updateTitle' value='".$title."'/></td>
+                            <td><textarea style='height: 98%; width: 99%' name='updateContent'>".$content." </textarea></td>
+                        </tr>       
+                    </tbody>
+                </table>
+                <button type='submit' class='btn btn-primary'>Zapisz</button>
             </form>
         </div>
-        </div>
+    </div>
+    <br>
         ";
     return $update_form;
 }
 
 // Funkcja z podzapytaniem do edycji
 function queryUpdate() {
+     // Dołączenie configu z bazą danych
     include('cfg.php');
 
-    $id = $_POST['update_id'];
-    $title = $_POST['update_title'];
-    $content = $_POST['update_content'];
+    $id = $_POST['updateId'];
+    $title = $_POST['updateTitle'];
+    $content = $_POST['updateContent'];
 
 
     // Dekodowanie w momencie pobierania zmiennej $content -- z uwagi na to, że query enkoduje znaki html'owe typu '<' lub ' " '...
@@ -211,6 +224,7 @@ function queryUpdate() {
 
 // Funkcja z podzapytaniem do usunięcia podstron
 function queryDelete() {
+     // Dołączenie configu z bazą danych
     include('cfg.php');
     $id = $_POST['idToDelete'];
     $query = "DELETE FROM `page_list` WHERE id=$id LIMIT 1";
@@ -225,7 +239,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
 // Funkcja z formularzem do dodania nowej podstrony
 function insertForm() {
-    
+     // Dołączenie configu z bazą danych
     include('cfg.php');
 
     $insertForm =
@@ -276,7 +290,7 @@ function insertForm() {
 
 // Funkcja do wykonania podzapytania
 function queryInsert() {
-
+    // Dołączenie configu z bazą danych
     include('cfg.php');
     
     $title = $_POST['insertTitle'];
@@ -304,11 +318,12 @@ if($_SESSION['loginFailed'] == 0) {
 
     echo UpdateForm();
     echo UpdateCategoryForm();
+    echo UpdateProductForm();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Jeśli Wykonano Update -- Wykonaj Update
-        if(isset($_POST['update_id'])) {
+        if(isset($_POST['updateId'])) {
             echo queryUpdate();
             echo "<script>";
             echo "alert('Pomyślnie zaaktualizowano stronę ! ');";
@@ -340,7 +355,7 @@ if($_SESSION['loginFailed'] == 0) {
         }
 
         // Jeśli Wykonano Update Kategorii -- Wykonaj Update Kategorii
-        if(isset($_POST['update_category_id'])) {
+        if(isset($_POST['updateCategoryId'])) {
             echo queryUpdateCategory();
             echo "<script>";
             echo "alert('Pomyślnie zaaktualizowano kategorię ! ');";
@@ -368,6 +383,60 @@ if($_SESSION['loginFailed'] == 0) {
             echo "</script>" ;
             exit;
         }
+
+        // Jeśli wykonano edycję produktu -- Wykonaj Update produktu
+        if(isset($_POST['updatedProductId'])) {
+            $message = queryUpdateProduct();
+            $_SESSION['message'] = $message;
+            echo "<script>";
+            echo "alert('Pomyślnie zmieniono produkt ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
+            exit;
+        }
+
+        // Jeśli kliknięto usunięcie produktu -- Wykonaj Delete produktu
+        if(isset($_POST['idProductToDelete'])) {
+            $message = queryProductDelete();
+            $_SESSION['message'] = $message;
+            echo "<script>";
+            echo "alert('Pomyślnie usunięto produkt ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
+            exit;
+        }
+
+        // Jeśli kliknięto dodanie produktu -- Wykonaj Insert produktu 
+        if(isset($_POST['sizeInsert'])) {
+            $message = queryInsertProduct();
+            $_SESSION['message'] = $message;
+            echo "<script>";
+            echo "alert('Pomyślnie dodano produkt ! ');";
+            echo "window.location = 'http://localhost/Application/app/admin/admin.php';";
+            echo "</script>" ;
+            exit;
+        }
+
+        // Jeśli dodano produkt do koszyka -- Dodaj zmienną z produktem do sesji
+        if(isset($_POST['addedToCartProductId'])) {
+            $message = addProductToCart();
+            $_SESSION['message'] = $message;
+            echo "<script>";
+            echo "alert('Pomyślnie dodano produkt do koszyka ! ');";
+            echo "</script>" ;
+            exit;
+        }
+
+        // Jeśli usuwasz produkt z koszyka -- usuń go z sesji
+        if (isset($_POST['productFromCartToDeleteId'])) {
+            $message = removeFromCart();
+            $_SESSION['message'] = $message;
+            echo "<script>";
+            echo "alert('Pomyślnie usunięto produkt do koszyka ! ');";
+            echo "</script>" ;
+            exit;
+        }
+
     }
 
     // Wygenerowanie formularzu do insert'ów + podstron jeśli to niezbędne
@@ -375,10 +444,19 @@ if($_SESSION['loginFailed'] == 0) {
     // Formularz z insertem dla podstron
     echo insertForm();
     // Wyświetlenie wszystkich KATEGORII oraz PODKATEGORII
-    list_categories();
+    listOfCategories();
      // Formularz z insertem dla kategorii/podkategorii
     echo insertFormCategory();
-
+    
+    pokazTytulProdukty(1);
+    productsList(1);
+    pokazTytulProdukty(2);
+    productsList(2);
+    pokazTytulProdukty(3);
+    productsList(3);
+    echo insertProductForm();
+    
+    echo showCartContent();
 }
 else {
     // Na wypadek błędnego zalogowania się
@@ -392,7 +470,9 @@ else {
 
 
 
-//    ------------------------------------------------ KATEGORIE ------------------------------------------------------
+// ******************************************************************************************************************************
+// ********************************************************** KATEGORIE *********************************************************
+// ******************************************************************************************************************************
 
 // Aktualne rekordy w mojej bazie danych (kluby oraz ich zawodnicy) :
 // Kategorie i podkategorie 
@@ -413,8 +493,8 @@ else {
 
 
 // Metoda do wyświetlenia wszystkich kategorii oraz podkategorii z bazy danych
-function list_categories() {
-
+function listOfCategories() {
+    // Dołączenie configu z bazą danych
     include "cfg.php";
 
     $query="SELECT * FROM category WHERE mother = 0";
@@ -568,10 +648,10 @@ function list_categories() {
 
 // Funkcja z formularzem do edycji dla KATEGORII/PODKATEGORII
 function UpdateCategoryForm() {
-
+    // Dołączenie configu z bazą danych
     include('cfg.php');
     if(empty($_POST['categoryID'])) {
-        // console.log("UPDATE KATEGORII START");
+        // console.log("UPDATE KATEGORII BRAK");
         return "";
     }
 
@@ -583,19 +663,21 @@ function UpdateCategoryForm() {
 
     $update_form = 
     "
+    <br>
+    <br>
         <div>
         <div>
             <h1>Edytuj Kategorię/Podkategorię ".$name." o ID : ".$id."</h1>
             <form method='post'>
-            <table style='width:100%; height: 400px'>
-                <thead>
+            <table class='table table-responsive-sm table-hover table-dark' style='height: 200px;'>
+                <thead class='table-dark'>
                     <th><span class='text'>ID</span></th>
                     <th><span class='text'>Matka</span></th>
                     <th><span class='text' id='content'>Nazwa</span></th>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><input type='text' readonly value='".$id."' name='update_category_id'/></td>
+                        <td><input type='text' readonly value='".$id."' name='updateCategoryId'/></td>
                         <td><input type='text' name='update_category_mother' value='".$mother."'/></td>
                         <td><textarea style='height: 98%; width: 99%' name='update_category_name'>".$name." </textarea></td>
                     </tr>       
@@ -611,9 +693,10 @@ function UpdateCategoryForm() {
 
 // Funkcja z podzapytaniem do edycji (dla kategorii)
 function queryUpdateCategory() {
+    // Dołączenie configu z bazą danych
     include('cfg.php');
 
-    $id = $_POST['update_category_id'];
+    $id = $_POST['updateCategoryId'];
     $mother = $_POST['update_category_mother'];
     $name = $_POST['update_category_name'];
 
@@ -634,6 +717,7 @@ function queryUpdateCategory() {
 
 // Funkcja z podzapytaniem do usunięcia kategorii/podkategorii
 function queryDeleteCategory() {
+    // Dołączenie configu z bazą danych
     include('cfg.php');
     $id = $_POST['categoryIDdelete'];
     $query = "DELETE FROM `category` WHERE id=$id LIMIT 1";
@@ -647,11 +731,11 @@ function queryDeleteCategory() {
 
 // Funkcja z formularzem do dodania nowej podstrony
 function insertFormCategory() {
-    
+    // Dołączenie configu z bazą danych
     include('cfg.php');
 
-    $insertForm =
-        '<div class="container h-100">
+    $insertForm ='
+    <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-12 col-xl-11">
                 <div class="card text-black" style="border-radius: 25px;">
@@ -699,6 +783,7 @@ function insertFormCategory() {
 // Funkcja do wykonania podzapytania typu INSERT dla kategorii/podkategorii
 function queryInsertCategory() {
 
+    // Dołączenie configu z bazą danych
     include('cfg.php');
     
     $mother = $_POST['insertMother'];
@@ -710,4 +795,771 @@ function queryInsertCategory() {
     return $result;
 }
 
+
+
+
+// ******************************************************************************************************************************
+// ********************************************************** PRODUKTY **********************************************************
+// ******************************************************************************************************************************
+
+
+
+// Funkcja do wyświetlenia ładnego tytułu dla poszczególnych kategorii produktów
+function pokazTytulProdukty($categoryId) {
+
+
+    // Dołączenie configu z bazą danych
+    include ("cfg.php");
+    $result = '';
+    if($categoryId == 1) {
+        $result = 
+        '
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+        <p class="text-center h1 fw-bold mx-md-4 mt-4">Piłki</p>
+        ';
+    }
+    
+    if($categoryId == 2) {
+        $result = 
+        '
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+        <p class="text-center h1 fw-bold mx-md-4 mt-4">Stroje</p>
+        ';
+    }
+    else if($categoryId == 3){
+        $result = 
+        '
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+        <p class="text-center h1 fw-bold mx-md-4 mt-4">Buty</p>
+        ';
+    }
+    echo $result;
+}
+
+// Metoda do wyświetlenia produktów na podstawie id kategorii (1--> piłki, 2--> stroje, 3-->buty)
+function productsList($categoryId) {
+    // Dołączenie configu z bazą danych
+    include ("cfg.php");
+
+    // Pobranie danych z bazy (Zapytanie typu select)
+    $query="SELECT * FROM product WHERE category = $categoryId";
+    $resultQuery = mysqli_query($link, $query);
+
+    // Główna pętla przelatująca po tabeli
+    while($row = mysqli_fetch_array($resultQuery)) {
+
+        // Przypisanie zmiennym wartości z rekordów
+        $id = $row['id'];
+        $title = $row['title'];
+        $description = $row['description'];
+        $creation_date = $row['creation_date'];
+        $modification_date = $row['modification_date'];
+        $expiration_date = $row['expiration_date'];
+        $net_price = $row['net_price'];
+        $value_added_tax = $row['value_added_tax'];
+        $amount_in_magazine = $row['amount_in_magazine'];
+        $availability = $row['availability'];
+        $category = $row['category'];
+        $size = $row['size'];
+        $image = base64_encode($row['image']);
+
+        // Warunki przez które produkt jest niedostępny
+        // 1. Ilość przedmiotów jednego typu w magazynie jest mniejsza niż 1 (nie ma produktu na stanie)
+        // 2. Data wygaśnięcia jest mniejsza niż aktualna (produkt wygasł)
+        // Wtedy Status dostępności jest równy 0 (TinyInt) (produkt jest niedostępny z różnych powodów)
+        if($amount_in_magazine <= 0 || date("Y-M-D", strtotime($expiration_date)) < date("Y-M-D")) {
+            $availability = false;
+        }
+        
+        // System dodawania do koszyka -> Produkt można dodać do koszyka tylko jeśli powyższe warunki nie są spełnione
+        $addToCart = "";
+
+        // Jeśli produkt jest niedostępny (ustawione to zostaje w powyższej metodzie) -> produktu nie można zakupić (niedostępny przycisk)
+        if ($availability == false) {
+            $addToCart = 
+            "
+            <button name='unavailable' class='btn btn-danger'>Produkt Aktualnie Niedostępny</button>
+            ";
+        }
+        // W innym wypadku produkt można dodać do koszyka bezpośrednio po kliknięciu
+        else {
+            $addToCart = "
+                <form method='post'>
+                    <input type='hidden' name='addedToCartProductId' value='".$id."'/>
+                    <input type='hidden' name='addedToCartAmountLeft' value='".$amount_in_magazine."'/>
+                    <button type='submit' name ='addToCart' class='btn btn-primary'>Dodaj do koszyka</button>
+                </form>";
+        }
+
+        // Wylistowanie produktów w HTML (tabela + przyciski) - dodany Bootstrap w wersji 5.2.1
+        $listOfProducts  = "
+        <head>
+            <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
+        </head>
+
+        <div>
+            <div>
+                <table class='table table-responsive-sm table-hover' style = 'margin-right: 5px;'>
+                    <thead class='table-dark'>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>ID</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Tytuł</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Opis Produktu</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Data Utworzenia Produktu</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Data Modyfikacji</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Data Wygasnięcia</span>
+                        </th >
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Cena netto</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Podatek VAT</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Ilość sztuk w magazynie</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Dostępność</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Kategoria</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Wielkość</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Zdjęcie Produktu</span>
+                        </th>
+                        <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                            <span>Zarządzaj</span>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr> 
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>".$id."
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$title
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$description
+                            </td>    
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$creation_date
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$modification_date
+                            </td> 
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$expiration_date
+                            </td> 
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$net_price
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$value_added_tax
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$amount_in_magazine
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$availability
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$category
+                            </td>
+                            <td style='border: 1px;'>
+                                <span style='font-size: small; margin-right: 15px;'>$size
+                            </td>
+                            <td>
+                                <img style='width: 150px; height: 150px; border: black;' src='data:image/jpeg;base64, $image'/>
+                            </td>
+                            <td>
+                                <form method='post'>
+                                    <input type='hidden' name='updatingId' value='".$id."'/>
+                                    <input type='hidden' name='updatingTitle' value='".$title."'/>
+                                    <input type='hidden' name='updatingDescription' value='".$description."'/>
+                                    <input type='hidden' name='updatingCD' value='".$creation_date."'/>
+                                    <input type='hidden' name='updatingMD' value='".$modification_date."'/>
+                                    <input type='hidden' name='updatingED' value='".$expiration_date."'/>
+                                    <input type='hidden' name='updatingNetPrice' value='".$net_price."'/>
+                                    <input type='hidden' name='updatingValueAddedTax' value='".$value_added_tax."'/>
+                                    <input type='hidden' name='updatingAmountInMagazine' value='".$amount_in_magazine."'/>
+                                    <input type='hidden' name='updatingAvailability' value='".$availability."'/>
+                                    <input type='hidden' name='updatingcategory' value='".$category."'/>
+                                    <input type='hidden' name='updatingsize' value='".$size."'/>
+                                    <input type='hidden' name='updatingImage' value='".$image."'/>
+                                    <button type='submit' name='edit' class='btn btn-warning'>Edytuj Produkt</button>
+                                </form>
+                                <form method='post'>
+                                    <input type='hidden' name='idProductToDelete' value='".$id."'/>
+                                    <button type='submit' name='delete' class='btn btn-danger'>Skasuj Produkt</button>
+                                </form>
+                                $addToCart
+                            </td>
+                        </tr>       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    ";
+    echo $listOfProducts;
+    }
+}
+
+//     ----------------------------------------------------- INSERT PRODUKTÓW -----------------------------------------------------
+
+
+// Metoda z formularzem do wykonania zapytania INSERT dla Produktów
+function insertProductForm() {
+    // Dołączenie configu z bazą danych
+    include ("cfg.php");
+
+
+    // formularz w postaci HTML'a + bootstrap
+    $insertForm = "
+    <head>
+        <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css' rel='stylesheet'>
+    </head>
+
+    <br>
+    <br>
+    <br>
+        <div>
+            <div>
+                <h2 style='text-align:center'>Dodaj Nowy Produkt</h2>
+                <form method='post' enctype='multipart/form-data'>
+                <table class='table table-responsive-sm table-hover table-dark' style='margin-right: 5px;'>
+                <thead class='table-dark'>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Tytuł</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Opis Produktu</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Data Utworzenia Produktu</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Data Modyfikacji</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Data Wygasnięcia</span>
+                    </th >
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Cena netto</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Podatek VAT</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Ilość sztuk w magazynie</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Dostępność</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 15px;'>
+                        <span>Kategoria</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-right: 5px;'>
+                        <span>Wielkość</span>
+                    </th>
+                    <th style='border: 1px;'><span style='font-size: small; margin-left: -5px'>
+                        <span>Zdjęcie Produktu</span>
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type='text' name='titleInsert'/>
+                        </td>
+                        <td>
+                            <input type='text' name='descriptionInsert'/>
+                        </td>
+                        <td>
+                            <input type='date' name='creationDateInsert'/>
+                        </td>
+                        <td>
+                            <input type='date' name='modificationDateInsert'/>
+                        </td>
+                        <td>
+                            <input type='date' name='expirationDateInsert'/>
+                        </td>
+                        <td>
+                            <input type='number' name='netPriceInsert' style='width: 65%'/>
+                        </td>
+                        <td>
+                            <input type='number' name='valueAddedTaxInsert' style='width: 55%'/>
+                        </td>
+                        <td>
+                            <input type='number' name='amountInMagazineInsert' style='width: 55%'/>
+                        </td>
+                        <td>
+                            <input type='text' name='availabilityInsert' value='' style='width: 45%'/>
+                        </td>
+                        <td>
+                            <input type='text' name='categoryIDInsert' value='$categoryID' style='width: 45%'/>
+                        </td>
+                        <td>
+                            <input type='number' name='sizeInsert' style='width: 45%;'/>
+                        </td>
+                        <td>
+                            <input type='file' name='newIMAGE' style='width: 85%;'/>
+                        </td>
+                    </tr> 
+                </tbody>
+                </table>
+                <button type='submit' name='add' class='btn btn-primary'>Dodaj Produkt</button>
+                </form>
+            </div>
+        </div>
+        ";
+    return $insertForm;
+}
+
+// Wykonanie Query dla zapytanie typu INSERT - dla produktów
+function queryInsertProduct() {
+    // Dołączenie configu z bazą danych
+    include('cfg.php');
+
+    // Pobranie danych z formularza i jego inputów
+    $title = $_POST['titleInsert'];
+    $description = $_POST['descriptionInsert'];
+    $creation_date = date('Y-m-d', strtotime($_POST['creationDateInsert']));
+    $modification_date = date('Y-m-d', strtotime($_POST['modificationDateInsert']));
+    $expiration_date = date('Y-m-d', strtotime($_POST['expirationDateInsert']));
+    $net_price = $_POST['netPriceInsert'];
+    $value_added_tax = $_POST['valueAddedTaxInsert'];
+    $amount_in_magazine = $_POST['amountInMagazineInsert'];
+    $availability = $_POST['availabilityInsert'];
+    $category = $_POST['categoryIDInsert'];
+    $size = $_POST['sizeInsert'];
+    $image = bin2hex(file_get_contents($_FILES['newIMAGE']['tmp_name']));
+
+    // Treść samego query
+    $query = "INSERT INTO `product`
+    (`title`, `description`, `creation_date`, `modification_date`,
+    `expiration_date`, `net_price`, `value_added_tax`, `amount_in_magazine`,
+    `availability`, `category`, `size`, `image`) VALUES 
+            ('$title', '$description', '$creation_date', '$modification_date',
+            '$expiration_date', $net_price, $value_added_tax, $amount_in_magazine,
+            $availability, $category, $size, 0x$image)";    //hexdecimal
+
+    // Wykonanie query na bazę - dodaj produkt
+    $resultQuery = mysqli_query($link, $query);
+    $_SESSION['query'] = $query;
+}
+
+
+//     ----------------------------------------------------- UPDATE PRODUKTÓW -----------------------------------------------------
+
+
+// Metoda z formularzem do edycji produktu -> pobranie edytowanego produktu + sam formularz z edycją
+function updateProductForm() {
+     // Dołączenie configu z bazą danych
+    include("cfg.php");
+
+    // jeśli brak wywołania edycji -> nie wyświetlaj formularza
+    if(empty($_POST['updatingId'])) {
+        return "";
+    }
+    // w przeciwnym wypadku :
+
+    // pobranie wartości z listy produktów (z zapytania typu select) - hidden inputy i atrybut 'name' w tagu <form>
+    $id = $_POST['updatingId'];
+    $title = $_POST['updatingTitle'];
+    $description = $_POST['updatingDescription'];
+    $creationDate = $_POST['updatingCD'];
+    $modificationDate = $_POST['updatingMD'];
+    $expirationDate = $_POST['updatingED'];
+    $netPrice = $_POST['updatingNetPrice'];
+    $valueAddedTax = $_POST['updatingValueAddedTax'];
+    $amountInMagazine = $_POST['updatingAmountInMagazine'];
+    $availability = $_POST['updatingAvailability'];
+    $category = $_POST['updatingCategory'];
+    $size = $_POST['updatingSize'];
+    $image = $_POST['updatingImage'];
+
+    //HTML pod sam formularz do edycji
+    $edit_product_form = "
+    <br>
+    <br>
+    <div>
+        <div>
+            <h1>Edytuj produkt '$title'</h1>
+            <form method='post' enctype='multipart/form-data'>
+                <table class='table table-responsive-sm table-hover table-dark'>
+                    <thead class='table-dark'>
+                        <th>
+                            <span>ID</span>
+                        </th>
+                        <th>
+                            <span>Tytuł</span>
+                        </th>
+                        <th>
+                            <span>Opis Produktu</span>
+                        </th>
+                        <th>
+                            <span>Data Utworzenia</span>
+                        </th>
+                        <th>
+                            <span>Data Modyfikacji</span>
+                        </th>
+                        <th>
+                            <span>Data Wygaszenia</span>
+                        </th>
+                        <th>
+                            <span>Cena</span>
+                        </th>
+                        <th>
+                            <span>Podatek VAT</span>
+                        </th>
+                        <th>
+                            <span>Sztuk w Magazynie</span>
+                        </th>
+                        <th>
+                            <span>Dostępny</span>
+                        </th>
+                        <th>
+                            <span>Kategoria</span>
+                        </th>
+                        <th>
+                            <span>Wielkość</span>
+                        </th>
+                        <th>
+                            <span>Zdjęcie</span>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input style='width: 100%' type='text' name='updatedProductId' readonly value='$id'/>
+                            </td>
+                            <td>
+                                <textarea style='height: 98%; width: 99%;' name='updatedProductTitle'>".$title."</textarea>
+                            </td>
+                            <td>
+                                <input style='width: 110%; height: 200%' name='updatedProductDescription' value='$description'/>
+                            </td>
+                            <td>
+                                <input style='width: 85%' type='date' name='updatedProductCreationDate' value='$creationDate'/>
+                            </td>
+                            <td>
+                                <input style='width: 85%' type='date' name='updatedProductModDate' value='$modificationDate'/>
+                            </td>
+                            <td>
+                                <input style='width: 85%' type='date' name='updatedProductExpDate' value='$expirationDate'/>
+                            </td>
+                            <td>
+                                <input style='width: 110%' type='number' name='updatedProductNet' value='$netPrice' step='0.01'/>
+                            </td>
+                            <td>
+                                <input style='width: 100%' type='number' name='updatedProductValuetax' value='$valueAddedTax'/>
+                            </td>
+                            <td>
+                                <input style='width: 65%' type='number' name='updatedProductAmount' value='$amountInMagazine'/>
+                            </td>
+                            <td>
+                                <input style='width: 65%' type='text' name='updatedProductAvailability' value='$availability'/>
+                            </td>
+                            <td>
+                                <input style='width: 65%' type='text' name='updatedProductCategory' value='$category'/>
+                            </td>
+                            <td>
+                                <input style='width: 65%' type='number' name='updatedProductSize' value='$size'/>
+                            </td>
+                            <td>
+                                <img style='width: 150px; height: 150px' src='data:image/jpeg;base64, $image'/>
+                                <input type='hidden' name='nonupdatedimage' value='$image'>
+                                <input type='file' name='updatedproductphoto' value='$image'/>
+                            </td>
+                        </tr>                     
+                    </tbody>
+                </table>
+                <button type='submit' class='btn btn-primary'>Edytuj Produkt</button>
+            </form>
+        </div>
+    </div>
+    <br>
+    <br>
+    ";
+    return $edit_product_form;
+}
+
+// Zapytanie typu Update do edycji produktu
+function queryUpdateProduct() {
+    // Dołączenie configu z bazą danych
+    include('cfg.php');
+
+    // pobranie wartości z post'a --> wszystko pochodzi z formularza do edycji, 1185
+    $id = $_POST['updatedProductId'];
+    $title = $_POST['updatedProductTitle'];
+    $description = $_POST['updatedProductDescription'];
+    $creationDate = $_POST['updatedProductCreationDate'];
+    $modificationDate = $_POST['updatedProductModDate'];
+    $expirationDate = $_POST['updatedProductExpDate'];
+    $netPrice = $_POST['updatedProductNet'];
+    $valueAddedTax = $_POST['updatedProductValuetax'];
+    $amountInMagazine = $_POST['updatedProductAmount'];
+    $availability = $_POST['updatedProductAvailability'];
+    $category = $_POST['updatedProductCategory'];
+    $size = $_POST['updatedProductSize'];
+    // ->sprawdzenie czy podano plik z obrazem
+    if($_FILES['updatedproductphoto']['tmp_name'] != ""
+        && isset($_FILES['updatedproductphoto']['tmp_name'])) {
+        // przekonwertowanie binarnych wartości na heksadecymalne do zdjęcia
+        $image = bin2hex(file_get_contents($_FILES['updatedproductphoto']['tmp_name'])); // funkcja działa tylko przy !!!tmp_name!!! -> dla name lub innych wg. dokumentacji jest problem
+    }
+    else {
+        // ->jeśli nie to przeładuj obraz poprzedni
+        $image = bin2hex(base64_decode($_POST['nonupdatedimage']));
+    }
+
+    // wykonanie samego query typu update
+    $query = "UPDATE `product` SET `title` = '".$title."', `description` = '".$description."', `creation_date` = '".$creationDate."', `modification_date` = '".$modificationDate."', `expiration_date` = '".$expirationDate."', `net_price` = ".$netPrice.", `value_added_tax` = ".$valueAddedTax.", `amount_in_magazine` = ".$amountInMagazine.", `availability` = ".$availability.", `category` = ".$category.", `size` = ".$size.", `image` = 0x$image WHERE `id` = ".$id." LIMIT 1";
+    $result = mysqli_query($link, $query);
+
+    return $result;
+}
+
+
+//     ----------------------------------------------------- DELETE PRODUKTÓW -----------------------------------------------------
+
+
+// Funkcja z podzapytaniem typu DELETE do usunięcia produktu po ID
+function queryProductDelete() {
+    // Dołączenie configu z bazą danych
+    include('cfg.php');
+    // id pobierane jak w poprzednich query tego typu po id aktualnego rekordu
+    // i kliknęciu w przycisk usunięcia (id pobierane jest z ukrytego inputa)
+    $id = $_POST['idProductToDelete'];
+    $query = "DELETE FROM `product` WHERE id = $id LIMIT 1";
+    $result = mysqli_query($link, $query);
+    return $result;
+}
+
+
+
+
+// ******************************************************************************************************************************
+// *********************************************************** KOSZYK ***********************************************************
+// ******************************************************************************************************************************
+
+
+// Rozpoczęcie sesji pod koszyk, do sesji wrzucane będą produkty
+session_start();
+
+// Metoda do dodania produktu do koszyka, dolicza 1 produkt przy każdym dodaniu do koszyka
+function addProductToCart() {
+
+    // Jeśli przedmiotu jeszcze nie ma w koszyku, ustaw jego licznik na 1, w przeciwnym wypadku dodaj jeden
+    if (!isset($_SESSION['count'])) {
+        $_SESSION['count'] = 1;
+    }
+    else {
+        $_SESSION['count'] ++;
+    }
+
+    // Licznik przedmiotu
+    $itemCounter = $_SESSION['count'];
+    // Id produktu z koszyka
+    $productFromCartId = $_POST['addedToCartProductId'];
+    // Ile pozostało w magazynie po dodaniu do koszyka
+    $amountRest = $_POST['addedToCartAmountLeft'] - 1;
+    // Modyfikacja liczby przedmiotów pozostałych w magazynie
+    $update = updateAmountOfProduct($productFromCartId, $amountRest);
+
+    // Ustawienie produktu do sesji z koszykiem -> zliczenie przedmiotów i rzeczywiste wrzucenie tego do sesji
+    $set = false;
+    // Zapisanie danych produktow z tablicy dwuwymiarowej - reszte pobierzemy po id_prod z bazy
+    // $prod[$nr]['id_prod'] = $id_prod;
+    // $prod[$nr]['ile'sztuk'] = $ile_sztuk;
+    // $prod[$nr]['wielkosc'] = $wielkosc;
+    // $prod[$nr]['data'] = time(); // pobranie aktualnego czasu
+
+    // Zamiast numeracji na sztywno - pętla do momentu licznika przedmiotu
+    for ($itemCount = 1; $itemCount <= $itemCounter; $itemCount++) {
+        if($_SESSION['cart'][$itemCount]["id"]==$productFromCartId){
+            $_SESSION['cart'][$itemCount]["amount"] ++;
+            $set = true;
+            break;
+        }
+    }
+    // Jeśli nie udało się dopisać kolejnego produktu do koszyka to dopisz go jako pierwszy i ustaw amount na 1
+    if(!$set) {
+        $_SESSION['cart'][$itemCounter] = array('id' => $productFromCartId, 'amount' => 1);
+    }
+    return  "Produkt dodano do koszyka!";
+}
+
+// Metoda od usunięcia produktu z koszyka (sesji)
+function removeFromCart() {
+
+    // Pobranie id produktu do usunięcia (z posta inputa)
+    $toDeleteId = $_POST['productFromCartToDeleteId'];
+    // Wszystkie produkty z koszyka
+    $products = $_SESSION['cart'];
+
+    // Ustawienie pod zmienną warunku czy można usunąć dany produkt
+    $canDelete = null;
+
+    // Sprawdzenie czy id usuwanego produktu jest w sesji z koszykiem i jeśli tak to ustaw dla zmiennej ten produkt do usunięcia
+    foreach ($products as $product) {
+        if ($product['id'] == $toDeleteId) {
+            $canDelete = $product;
+        }
+    }
+    // Jeśli nie to nie usuwaj
+    if ($canDelete == null) {
+        return "";
+    }
+
+    // Pobranie z koszyka odpowiedniego produktu do usunięcia/pomniejszenia o ilość
+    $itemCounter = array_search($canDelete, $products);
+    // Wartość produktów w magazynie -> należy ją powiększyć o 1 skoro usuwamy produkt z koszyka
+    $amount = $_POST['amountOfProductToDelete'] + 1;
+    
+    $toDeleteId = $_SESSION['cart'][$itemCounter]["id"];
+
+    // W przypadku błędu
+    if(!updateAmountOfProduct($toDeleteId, $amount)) {
+        return "Nie udało się zmienić ilości produktu !";
+    }
+
+    // Zmniejszenie licznika z koszyka
+    $_SESSION['cart'][$itemCounter]['amount'] --;
+    $_SESSION['count'] --;
+
+    // Wyrzucenie ostateczne produktu z koszyka -> unset w sesji dla obiektu
+    if ($_SESSION['cart'][$itemCounter]['amount'] == 0) {
+        unset( $_SESSION['cart'][$itemCounter]);
+    }
+    return "Pomyślnie wyrzucono z koszyka!";
+}
+
+// Metoda do wyświetlenia zawartości koszyka (obiekty z sesji)
+function showCartContent() {
+    // Dołączenie configu z bazą danych
+    include("cfg.php");
+    // Brutto dla całego koszyka
+    $grossPriceCart = 0;
+    // Wszystkie produkty
+    $products = $_SESSION['cart'];
+
+    // HTML pod wyświetlenie koszyka -> Najpierw Nagłówek jednorazowo
+    $cartHTML .= "
+    <br>
+    <br>
+    <div >
+        <div>
+            <h2 style='text-align:center'>Twój Koszyk</h2>
+            <table class='table table-responsive-sm table-hover table-dark'>
+                <thead class='table-dark'>                   
+                    <th>
+                        <span>Przedmiot</span>
+                    </th>
+                    <th>
+                        <span>Brutto</span>
+                    </th>
+                    <th>
+                        <span>Wybranych Sztuk</span>
+                    </th>
+                    <th>
+                        <span>Zarządzaj Koszykiem</span>
+                    </th>
+                </thead>";
+
+    // Następnie poszczególne wiersze z koszyka -> produkty po kolei
+    foreach ($products as $product) {
+        // Id produktu do przyszłego usunięcia
+        $toDeleteId = $product["id"];
+        // Liczba produktów w koszyku
+        $amount = $product["amount"];
+        // Pobranie produktu z bazy przy pomocy SELECT'a
+        $query="SELECT * FROM `product` WHERE id = $toDeleteId LIMIT 1";
+        // Wywołanie tego na bazie (połączenie z configu)
+        $result=mysqli_query($link, $query);
+
+        // Nadanie zmiennym wartości z select'a
+        while($row = mysqli_fetch_array($result)) {
+            $net = $row['net_price'];
+            $vat = $row['value_added_tax'];
+            $amountInMagazine = $row['amount_in_magazine'];
+            $image = base64_encode($row['image']);
+            $gross = $net+$net* ($vat/100);
+
+            // Wyliczenie wartości brutto z całego koszyka
+            $grossPriceCart += $gross * $amount;
+
+            // Wyświetlenie rekordów po kolei
+            $cartHTML .=  "        
+                    <tbody'>
+                        <tr> 
+                            <td>
+                                <img style='width: 75px; height: 75px' src='data:image/jpeg;base64, $image'/>
+                            </td>
+                            <td>
+                                $gross
+                            </td>
+                            <td>
+                                $amount
+                            </td>
+                            <td>
+                                <form method='post'>
+                                    <input type='hidden' name='productFromCartToDeleteId' value='". $toDeleteId ."'/>
+                                    <input type='hidden' name='amountOfProductToDelete' value='".$amountInMagazine."'/>
+                                    <button type='submit' class='btn btn-danger' name='delete'>Usuń produkt</button>
+                                </form>
+                            </td>
+                        </tr>       
+                    </tbody>
+
+    ";
+        }
+    }
+
+    // Wyświetlenie ceny po wyliczeniu w pętli
+    $cartHTML.= '
+            </table>   
+        </div>
+    </div>
+<h4>Cena: '.$grossPriceCart.'zł</h4>';
+    return $cartHTML;
+}
+
+
+
+// Metoda do edycji pozostałych produktów w magazynie
+function updateAmountOfProduct($productId, $amountRest) {
+    // Dołączenie configu z bazą danych
+    include("cfg.php");
+
+    // Wykonanie zapytania typu update do zmiany ilości produktów na stanie
+    // (zmiana następuje po dodaniu produktu do koszyka bądź usunięciu go z niego)
+    $query="UPDATE `product` SET `amount_in_magazine` = $amountRest WHERE `id` = $productId ";
+    $resultQuery=mysqli_query($link, $query);
+    if($resultQuery == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 ?>
